@@ -83,6 +83,9 @@ const App = () => (
     <h1>Lazy loading</h1>
     <LazyCarousel count={1000} decorators={noDots}/>
 
+    <h1>AutoPlay (wrapAround enabled)</h1>
+    <LazyCarousel count={10} autoplay wrapAround/>
+
     <h1>Multiple slides</h1>
     <LazyCarousel count={10} slidesToShow={4} slidesToScroll='auto'/>
 

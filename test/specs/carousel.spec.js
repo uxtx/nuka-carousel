@@ -90,8 +90,8 @@ describe('Carousel', function () {
           ),
           container
         );
-        var list = getComponentsWithClassName(component, 'slider-frame');
-        expect(list.length).to.equal(1);
+        var frame = getComponentsWithClassName(component, 'slider-frame');
+        expect(frame.length).to.equal(1);
     });
 
     it('should render a .slider-list ul', function() {
@@ -715,4 +715,43 @@ describe('Carousel', function () {
 
   });
 
+  describe('Events', function() {
+
+    beforeEach(function() {
+      setup();
+    });
+
+    afterEach(function() {
+      teardown();
+    });
+    it('should handle mouse event interactions', function() {
+      component = ReactDOM.render(
+        React.createElement(carousel, {autoplay: true},
+          React.createElement('p', null, 'Slide 1'),
+          React.createElement('p', null, 'Slide 2'),
+          React.createElement('p', null, 'Slide 3'),
+          React.createElement('p', null, 'Slide 4')
+        ),
+        container
+      );
+      var list = getComponentsWithClassName(component, 'slider-slide');
+      expect(component.state.currentSlide).to.equal(0);
+      var frame = getComponentsWithClassName(component, 'slider-frame');
+      // handle click safely
+      TestUtils.Simulate.click(frame[0]);
+      expect(component.state.dragging).to.equal(false);
+      expect(component.state.autoplayPaused).to.equal(null);
+      TestUtils.Simulate.mouseOver(list[0]);
+      expect(component.state.autoplayPaused).to.equal(true);
+      TestUtils.Simulate.mouseDown(list[0], { clientX: 5, clientY: 5});
+      expect(component.state.dragging).to.equal(true);
+      TestUtils.Simulate.mouseUp(list[0]);
+      TestUtils.Simulate.mouseOut(list[0]);
+      expect(component.state.autoplayPaused).to.equal(null);
+      expect(component.state.dragging).to.equal(false);
+      // handle click unsafely
+      TestUtils.Simulate.click(frame[0]);
+    });
+
+  });
 });

@@ -117,6 +117,7 @@ const Carousel = React.createClass({
 
   getInitialState() {
     return {
+      autoplayPaused: null,
       currentSlide: this.props.slideIndex,
       dragging: false,
       frameWidth: 0,
@@ -338,15 +339,15 @@ const Carousel = React.createClass({
 
   handleMouseOver() {
     if (this.props.autoplay) {
-      this.autoplayPaused = true;
+      this.setState({ autoplayPaused: true });
       this.stopAutoplay();
     }
   },
 
   handleMouseOut() {
-    if (this.props.autoplay && this.autoplayPaused) {
+    if (this.props.autoplay && this.state.autoplayPaused) {
       this.startAutoplay();
-      this.autoplayPaused = null;
+      this.setState({ autoplayPaused: null });
     }
   },
 
@@ -355,7 +356,7 @@ const Carousel = React.createClass({
       e.preventDefault();
       e.stopPropagation();
 
-      if (e.nativeEvent) {
+      if (e.nativeEvent && typeof e.nativeEvent.stopPropagation === 'function') {
         e.nativeEvent.stopPropagation();
       }
     }
@@ -449,7 +450,7 @@ const Carousel = React.createClass({
   },
 
   resetAutoplay() {
-    if (this.props.autoplay && !this.autoplayPaused) {
+    if (this.props.autoplay && !this.state.autoplayPaused) {
       this.stopAutoplay();
       this.startAutoplay();
     }
